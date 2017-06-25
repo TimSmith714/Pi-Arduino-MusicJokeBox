@@ -12,9 +12,7 @@ try:
     if device.isValid():
         for i in range(10):
             print str(i)
-            analog_one = float(device.analogRead(3)) * 3.3 / 1024
-            analog_two = float(device.anaogRead(4)) * 3.3 / 1024
-            if analog_one > analog_two:
+            if float(device.analogRead(3)) > float(device.analogRead(4)):
                 print "On"
             else:
                 print "Off"
@@ -25,9 +23,11 @@ try:
 
 	device.detach()
 	device.stopDaemon()
+        print 'script finished'
     else:
 	print 'UUGear device is not currently installed'
 except:
-    #print 'Error:' + str(e)
     print "Unexpected error:", sys.exc_info()[0]
+    device.detach()
+    device.stopDaemon()
 
