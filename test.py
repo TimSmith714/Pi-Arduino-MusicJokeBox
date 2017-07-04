@@ -9,26 +9,23 @@ print 'starting init'
 pygame.init()
 UUGearDevice.setShowLogs(0)
 fname = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M') + "-log.txt"
-open(fname, 'a')
+f_new = open(fname, 'a')
+f_new.close()
 
 try: 
     device = UUGearDevice('UUGear-Arduino-8483-2314')
 
     if device.isValid():
-        device.setPinModeAsOutput(13)
         pygame.mixer.music.load('track01.mp3')
         pygame.mixer.music.play()
         pygame.mixer.music.pause()
-        for i in range(30):
-            print str(i)
+        while True:
             if float(device.analogRead(3)) > float(device.analogRead(4)):
                 print "On"
-                if pygame.mixer.music.get_busy == False:
-                    pygame.mixer.music.unpause()
+                pygame.mixer.music.unpause()
             else:
                 print "Off"
-                if pygame.mixer.music.get_busy == True:
-                    pygame.mixer.music.pause()
+                pygame.mixer.music.pause()
 
             print "Device 1: %0.2f" % (float(device.analogRead(3)) * 3.3 / 1024), "V"
             print "Device 2: %0.2f" % (float(device.analogRead(4)) * 3.3 / 1024), "V"
@@ -43,7 +40,7 @@ try:
                 device.stopDaemon()
                 pygame.quit()
                 print("Script Stopped")
-                exit()
+                raise SystemExit
 
 
 	pygame.mixer.music.stop()
@@ -51,6 +48,7 @@ try:
         device.stopDaemon()
         pygame.quit()
         print("Script Finished")
+        raise SystemExit
     else:
 	print 'UUGear device is not currently installed'
 except:
@@ -58,4 +56,5 @@ except:
     device.detach()
     device.stopDaemon()
     print("Script Finished")
+    raise SystemExit
 
