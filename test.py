@@ -36,10 +36,15 @@ try:
             f.write(datetime.datetime.now().strftime('%Y-%m-%dT%H:%M.%S') + "\n")
             f.close()
 	    sleep(0.5)
-            if i % 20 == 0:
-                device.setPinHigh(13)
-                sleep(0.2)
-                device.setPinLow(13)
+            if float(device.analogRead(4)) * 3.3 / 1024 < 0.1:
+                print("Stopping script")
+                pygame.mixer.music.stop()
+                device.detach()
+                device.stopDaemon()
+                pygame.quit()
+                print("Script Stopped")
+                exit()
+
 
 	pygame.mixer.music.stop()
         device.detach()
